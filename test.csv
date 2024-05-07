@@ -1,0 +1,6 @@
+name,ip
+docker,10.1.0.31
+master,10.1.0.17
+worker-1,10.1.0.19
+worker-2,10.1.0.20
+test,10.1.0.10
