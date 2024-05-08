@@ -1,10 +1,12 @@
+import json
 from django.shortcuts import render
 from .models import Servers
 import subprocess
 import re
+from re import findall
 from datetime import datetime
 from django.http.response import JsonResponse
-
+from django.http.request import HttpRequest
 
 
 def ping_servers(servers):
@@ -12,7 +14,7 @@ def ping_servers(servers):
     command = ['fping', '-c1', '-t1000', *list(map(lambda item: item.ip, servers))]
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
-    results = re.findall(r"^([0-9a-z.]+)\s*:\s*xmt\/rcv\/%loss\s+=\s+([0-9]+/[0-9]+/[0-9]+)%(?:,\s+min\/avg\/max\s+=\s+([0-9.]+\/[0-9.]+\/[0-9.]+))?$", stderr, re.MULTILINE)
+    results = findall(r"^([0-9a-z.]+)\s*:\s*xmt\/rcv\/%loss\s+=\s+([0-9]+/[0-9]+/[0-9]+)%(?:,\s+min\/avg\/max\s+=\s+([0-9.]+\/[0-9.]+\/[0-9.]+))?$", stderr, re.MULTILINE)
     for result in results:
         r = {}
         r['ip'], a, b = result
@@ -27,7 +29,7 @@ def ping_servers(servers):
 
 def server_view(request):
     server = Servers.objects.all()
-    return render(request, 'server.html', {'server': server})
+    return render(request, 'server.html', {'server': server, 'alerts': alerts_data})
 
 
 def content(req):
@@ -38,3 +40,28 @@ def content(req):
         'status': status,
         'current_time': current_time,
     })
+
+
+alerts_data = []
+from django.views.decorators.csrf import csrf_exempt
+
+
+@csrf_exempt
+ # Ensure this view only accepts POST requests
+def webhook(req: HttpRequest):
+    data = json.loads(req.body)
+    for alert in data['alerts']:
+        if alert['status'] == 'firing':
+            alert_info = {
+                'instance': alert['labels']['category'],
+                'name': alert['labels']['nodename'],
+                'capacity': alert['values']['A']
+            }
+            alerts_data.append(alert_info)
+        else:
+            print('OK')
+    return JsonResponse({'alerts': alerts_data})
+
+
+def webhook_view(request):
+    return render(request, 'index.html', {'alerts': alerts_data})

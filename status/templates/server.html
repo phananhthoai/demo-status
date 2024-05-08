@@ -9,5 +9,6 @@
     {% for item in server %}
         <p>Current status: {{ item.server }} at {{ item.ip }}</p>
     {% endfor %}
+    {% include "alert-section.html" %}
 </body>
 </html>

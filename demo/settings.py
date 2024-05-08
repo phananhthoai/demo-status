@@ -127,3 +127,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CSRF
+# https://docs.djangoproject.com/en/5.0/ref/settings/#sessions
+
+CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = []
+if 'PUBLIC_HOST' in os.environ:
+    CSRF_TRUSTED_ORIGINS.append('https://%s' % os.environ.get('PUBLIC_HOST'))
