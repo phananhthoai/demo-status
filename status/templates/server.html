@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server</title>
+</head>
+<body>
+    <h1>Server</h1>
+    {% for item in server %}
+        <p>Current status: {{ item.server }} at {{ item.ip }}</p>
+    {% endfor %}
+</body>
+</html>

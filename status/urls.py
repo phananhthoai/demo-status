@@ -1,7 +1,9 @@
 from django.urls import path
 
-from . import views
+from .views import server_view
+from .views import content
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("server/", server_view, name="server"),
+    path("status/", content, name="status"),
 ]
