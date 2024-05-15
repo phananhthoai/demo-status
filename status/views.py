@@ -1,12 +1,21 @@
 import json
 from django.shortcuts import render
-from .models import Servers
+from .models import Servers, Status
 import subprocess
 import re
 from re import findall
 from datetime import datetime
 from django.http.response import JsonResponse
 from django.http.request import HttpRequest
+
+
+def add_db_status(r, state, server):
+    status_obj = Status(
+        status = f"%loss/avg = {r['loss']}%/{r['avg']}",
+        content = state,
+        server = server,
+    )
+    status_obj.save()
 
 
 def ping_servers(servers):
@@ -23,6 +32,19 @@ def ping_servers(servers):
         r['xmt'], r['rcv'], r['loss'] = a.split('/')
         if b:
             r['min'], r['avg'], r['max'] = b.split('/')
+        else:
+            r['min'] = r['avg'] = r['max'] = None
+        #print('@@@', server.ip)
+        if r['avg'] == None:
+            state = 'Not Connected'
+            add_db_status(r, state, server)
+        elif float(r['avg']) > 50:
+            state = 'Slow'
+            add_db_status(r, state, server)
+        else:
+            state = 'Connected'
+            add_db_status(r, state, server)
+
         status_summary.append(r)
     return status_summary
 
@@ -61,6 +83,8 @@ def webhook(req: HttpRequest):
         else:
             print('OK')
     return JsonResponse({'alerts': alerts_data})
+
+
 
 
 def webhook_view(request):
