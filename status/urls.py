@@ -8,6 +8,6 @@ from .views import webhook_view
 urlpatterns = [
     path("server/", server_view, name="server"),
     path("status/", content, name="status"),
-    path("webhook", webhook, name="webhook"),
+    path("webhook/", webhook, name="webhook"),
     path("result/", webhook_view, name="resutl")
 ]

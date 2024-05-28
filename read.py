@@ -1,7 +1,7 @@
 from django import setup
 setup()
 
-from status.models import Status, Alert, Servers
+from status.models import State, Alert, Server
 from csv import reader
 
 if __name__ == '__main__':
@@ -10,5 +10,5 @@ if __name__ == '__main__':
         r = reader(f)
         next(r)
         for line in r:
-            s = Servers(server=line[0], ip=line[1])
+            s = Server(server=line[0], ip=line[1])
             s.save()

@@ -1,8 +1,10 @@
 
 from django.contrib import admin
 
-from .models import Servers, Status, Alert
+from .models import Server, State, Alert
 
-admin.site.register(Servers)
-admin.site.register(Status)
+admin.site.register(Server)
+admin.site.register(State)
 admin.site.register(Alert)
+
+

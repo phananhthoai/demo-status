@@ -25,13 +25,14 @@ SECRET_KEY = 'django-insecure-4@h95n$hxt8jc0bkhtyy&dsq+a@j)i_hob^e!2h4#77$8!0!ib
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.2.103', 'd3.hocdevops.me']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
     "status.apps.StatusConfig",
     "polls.apps.PollsConfig",
+    "core_app",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

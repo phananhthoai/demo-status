@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from .models import Servers, Status
+from .models import Server, State, Alert
 import subprocess
 import re
 from re import findall
@@ -10,7 +10,7 @@ from django.http.request import HttpRequest
 
 
 def add_db_status(r, state, server):
-    status_obj = Status(
+    status_obj = State(
         status = f"%loss/avg = {r['loss']}%/{r['avg']}",
         content = state,
         server = server,
@@ -34,7 +34,7 @@ def ping_servers(servers):
             r['min'], r['avg'], r['max'] = b.split('/')
         else:
             r['min'] = r['avg'] = r['max'] = None
-        #print('@@@', server.ip)
+        print('@@@', server.ip)
         if r['avg'] == None:
             state = 'Not Connected'
             add_db_status(r, state, server)
@@ -50,12 +50,12 @@ def ping_servers(servers):
 
 
 def server_view(request):
-    server = Servers.objects.all()
+    server = Server.objects.all()
     return render(request, 'server.html', {'server': server, 'alerts': alerts_data})
 
 
 def content(req):
-    server = Servers.objects.all()
+    server = Server.objects.all()
     status = ping_servers(server)
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return JsonResponse({
@@ -68,17 +68,29 @@ alerts_data = []
 from django.views.decorators.csrf import csrf_exempt
 
 
+def add_db_alerts(desc, status, server):
+    alert_obj = Alert(
+        status = status,
+        describe = desc,
+        server = server,
+    )
+    alert_obj.save()
+
 @csrf_exempt
  # Ensure this view only accepts POST requests
 def webhook(req: HttpRequest):
+    server = Server.objects.all()
     data = json.loads(req.body)
     for alert in data['alerts']:
         if alert['status'] == 'firing':
+            if server.
             alert_info = {
                 'instance': alert['labels']['category'],
                 'name': alert['labels']['nodename'],
-                'capacity': alert['values']['A']
+                'capacity': alert['values']['A'],
+                'info': alert['labels']['alertname'],
             }
+            add_db_alerts(alert['labels']['alertname'], alert['status'], alert['labels']['nodename'])
             alerts_data.append(alert_info)
         else:
             print('OK')
