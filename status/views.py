@@ -34,7 +34,7 @@ def ping_servers(servers):
             r['min'], r['avg'], r['max'] = b.split('/')
         else:
             r['min'] = r['avg'] = r['max'] = None
-        print('@@@', server.ip)
+        #print('@@@', server)
         if r['avg'] == None:
             state = 'Not Connected'
             add_db_status(r, state, server)
@@ -76,27 +76,33 @@ def add_db_alerts(desc, status, server):
     )
     alert_obj.save()
 
+
+def delete_alert(id):
+    Alert.objects.filter(server_id=id).delete()
+
+
 @csrf_exempt
  # Ensure this view only accepts POST requests
 def webhook(req: HttpRequest):
     server = Server.objects.all()
     data = json.loads(req.body)
     for alert in data['alerts']:
-        if alert['status'] == 'firing':
-            if server.
-            alert_info = {
-                'instance': alert['labels']['category'],
-                'name': alert['labels']['nodename'],
-                'capacity': alert['values']['A'],
-                'info': alert['labels']['alertname'],
-            }
-            add_db_alerts(alert['labels']['alertname'], alert['status'], alert['labels']['nodename'])
-            alerts_data.append(alert_info)
-        else:
-            print('OK')
+        for i in range(len(server)):
+            if alert['status'] == 'firing':
+                if server[i].server == alert['labels']['nodename']:
+                    info_disk = alert['labels']['alertname'] + " - Capacity: " + str(alert['values']['A'])
+                    alert_info = {
+                        'instance': alert['labels']['category'],
+                        'name': server[i].server,
+                        'capacity': alert['values']['A'],
+                        'info': info_disk,
+                    }
+                    add_db_alerts(info_disk, alert['status'], server[i])
+                    alerts_data.append(alert_info)
+            else:
+                print('@@@', server[i].id)
+                delete_alert(server[i].id)
     return JsonResponse({'alerts': alerts_data})
-
-
 
 
 def webhook_view(request):

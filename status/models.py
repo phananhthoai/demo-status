@@ -14,7 +14,7 @@ class State(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     content = models.CharField(max_length=30)
-    server = models.ForeignKey(Server, on_delete=models.CASCADE, unique=True)
+    server = models.ForeignKey(Server, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.status} - {self.updated_at} - {self.content}'
@@ -25,7 +25,7 @@ class Alert(models.Model):
     describe = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    server = models.ForeignKey(Server, on_delete=models.CASCADE, unique=True)
+    server = models.ForeignKey(Server, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.status.name} - {self.updated_at} - {self.describe}'
+        return f'{self.status} - {self.updated_at} - {self.describe}'
