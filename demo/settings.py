@@ -137,3 +137,5 @@ CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = []
 if 'PUBLIC_HOST' in os.environ:
     CSRF_TRUSTED_ORIGINS.append('https://%s' % os.environ.get('PUBLIC_HOST'))
+
+STATIC_ROOT = os.environ.get('STATIC_ROOT') or join(BASE_DIR, 'static')
