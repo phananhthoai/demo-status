@@ -84,6 +84,8 @@ def delete_alert(id):
 @csrf_exempt
  # Ensure this view only accepts POST requests
 def webhook(req: HttpRequest):
+    if req.method != 'POST':
+      return JsonResponse({'error': 'Invalid'}, status=400)
     server = Server.objects.all()
     data = json.loads(req.body)
     for alert in data['alerts']:
