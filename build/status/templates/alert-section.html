@@ -1,0 +1,12 @@
+<section>
+    <h1>Alert Details</h1>
+    <div>
+        <ul>
+            {% for alert in alerts %}
+                <li><strong>Node Name: </strong> {{ alert.name }}</li>
+                <li><strong>Instance: </strong> {{ alert.instance }}</li>
+                <li><strong>Storage: </strong> {{ alert.capacity }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>

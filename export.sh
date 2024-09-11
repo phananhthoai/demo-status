@@ -1,0 +1,4 @@
+export DATABASE_HOST=172.17.0.2
+export DATABASE_NAME=demo
+export DATABASE_PASSWORD=dev
+export DATABASE_USER=dev

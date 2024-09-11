@@ -85,16 +85,17 @@ def delete_alert(id):
  # Ensure this view only accepts POST requests
 def webhook(req: HttpRequest):
     server = Server.objects.all()
+    print('@@@', req.body)
     data = json.loads(req.body)
     for alert in data['alerts']:
         for i in range(len(server)):
             if alert['status'] == 'firing':
                 if server[i].server == alert['labels']['nodename']:
-                    info_disk = alert['labels']['alertname'] + " - Capacity: " + str(alert['values']['A'])
+                    info_disk = alert['labels']['alertname'] + " - Capacity: " + str(alert['values']['B'])
                     alert_info = {
                         'instance': alert['labels']['category'],
                         'name': server[i].server,
-                        'capacity': alert['values']['A'],
+                        'capacity': alert['values']['B'],
                         'info': info_disk,
                     }
                     add_db_alerts(info_disk, alert['status'], server[i])
