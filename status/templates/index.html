@@ -3,9 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alert Details</title>
+    <title>Server Status Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .dashboard-container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: red;
+        }
+        .server-card {
+            background-color: #25274d;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .server-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .server-details span {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .status.online {
+            color: #4caf50;
+            font-weight: bold;
+        }
+        .status.offline {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .usage-bar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #333;
+            position: relative;
+        }
+        .usage-fill.firing {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #ff0000; /* Red for FIRING */
+        }
+        .usage-fill.resolved {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #4caf50; /* Green for RESOLVED */
+        }
+    </style>
 </head>
 <body>
-    {% include "alert-section.html" %}
+    <div class="dashboard-container">
+        <div class="title">DATACENTER</div>
+
+        {% for server in status %}
+        <div class="server-card">
+            <div class="server-details">
+                <span><strong>Nameserver:</strong> {{ server.labels.nodename }}</span>
+                <span><strong>Status:</strong>
+                    {% if server.status == "FIRING" %}
+                        FIRING
+                    {% else %}
+                        RESOLVED
+                    {% endif %}
+                </span>
+                <span><strong>Usage: </strong>
+                    {% if server.status == "RESOLVED" %}
+                        {% if server.labels.alertname == "CPUUsageHigh" or server.labels.alertname == "RAMUsageHigh" %}
+                            {{ server.values.B|floatformat:0 }}%
+                        {% else %}
+                            {{ server.values.B }}
+                        {% endif %}
+                    {% else %}
+                        {% if server.labels.alertname == "CPUUsageHigh" or server.labels.alertname == "RAMUsageHigh" %}
+                            {{ server.labels.alertname }} - {{ server.values.B|floatformat:0 }}%
+                        {% else %}
+                            {{server.labels.alertname}} {{ server.values.B }}
+                        {% endif %}
+                    {% endif %}
+                </span>
+            </div>
+            <div class="usage-bar">
+                <div class="usage-fill {% if server.status == 'FIRING' %}firing{% else %}resolved{% endif %}"></div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
 </body>
 </html>

@@ -77,9 +77,9 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': os.environ.get('DATABASE_HOST', 'demo_mariadb'),
-        'USER': os.environ.get('DATABASE_USER'),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST', '172.17.0.3'),
+        'USER': os.environ.get('DATABASE_USER', 'dev'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'dev'),
         'NAME': os.environ.get('DATABASE_NAME', 'demo'),
         'OPTIONS': {
             'charset': 'utf8mb4',
@@ -89,6 +89,8 @@ DATABASES = {
         },
     }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -133,9 +135,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#sessions
 
 CSRF_COOKIE_SAMESITE = 'Strict'
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
 CSRF_TRUSTED_ORIGINS = []
 if 'PUBLIC_HOST' in os.environ:
-    CSRF_TRUSTED_ORIGINS.append('https://%s' % os.environ.get('PUBLIC_HOST'))
+    CSRF_TRUSTED_ORIGINS.append('http://%s' % os.environ.get('PUBLIC_HOST'))
 
 STATIC_ROOT = os.environ.get('STATIC_ROOT') or join(BASE_DIR, 'static')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kenkukhanh@gmail.com'
+EMAIL_HOST_PASSWORD = 'objvolitthfviyum'

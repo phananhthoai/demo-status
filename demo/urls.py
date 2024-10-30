@@ -21,9 +21,10 @@ from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
+    path('', include('status.urls')),
     path("polls/", include("polls.urls")),
     path("status/", include("status.urls")),
     path('admin/', admin.site.urls),
     path('webhook/', include("status.urls")),
-    path('', include('status.urls')),
+
 ]
