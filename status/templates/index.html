@@ -88,20 +88,19 @@
                         RESOLVED
                     {% endif %}
                 </span>
-                <span><strong>Usage: </strong>
+                <span><strong>Description: </strong>
                     {% if server.status == "RESOLVED" %}
-                        {% if server.labels.alertname == "CPUUsageHigh" or server.labels.alertname == "RAMUsageHigh" %}
-                            {{ server.values.B|floatformat:0 }}%
-                        {% else %}
-                            {{ server.values.B }}
-                        {% endif %}
+                        OK
                     {% else %}
-                        {% if server.labels.alertname == "CPUUsageHigh" or server.labels.alertname == "RAMUsageHigh" %}
-                            {{ server.labels.alertname }} - {{ server.values.B|floatformat:0 }}%
+                        {% if server.labels.alertname == "CPUUsageHigh" or server.labels.alertname == "RAMUsageHigh" or server.labels.alertname == "CPUUsageWarning" or server.labels.alertname == "RAMUsageWarning" %}
+                            {{ server.labels.alertname }} - {{ server.values.B|floatformat:1 }}%
                         {% else %}
                             {{server.labels.alertname}} {{ server.values.B }}
                         {% endif %}
                     {% endif %}
+                </span>
+                <span><strong>Created: </strong>
+                    {{ server.created_at|date:"d/m/Y H:i" }}
                 </span>
             </div>
             <div class="usage-bar">

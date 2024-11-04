@@ -1,7 +1,8 @@
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.db import models
 from django.template.loader import render_to_string
-
+from requests import request
+from demo.settings import API_VOICE
 
 class Server(models.Model):
     server = models.CharField(max_length=30, unique=True)
@@ -45,18 +46,44 @@ class Alert(models.Model):
     def __str__(self):
         return f'{self.fingerprint}: {self.status}'
 
+
+
+    def get_audio(self):
+        url = 'https://api.fpt.ai/hmi/tts/v5'
+        payload = f'Chào Team DevOps Có Lỗi { self.labels["alertname"] } Trong Hệ Thống Ở Node { self.labels["nodename"] }'
+        headers = {
+            'api-key': API_VOICE,
+            'speed': '',
+            'voice': 'linhsan'
+        }
+        response = request('POST', url, data=payload.encode('utf-8'), headers=headers)
+
+        return response.json().get('async')
+
+
     def build_mail_body(self):
-        return render_to_string('mail.html', {
-            'labels': self.labels,
-            'annotations': self.annotations,
-            'values': self.values,
-            'status': self.status,
-        })
+        if self.annotations['level'] == 'Critical':
+            return render_to_string('mail.html', {
+                'labels': self.labels,
+                'annotations': self.annotations,
+                'values': self.values,
+                'status': self.status,
+                'voice': self.get_audio(),
+            })
+        elif self.annotations['level'] == 'Warning':
+            return render_to_string('mail.html', {
+                'labels': self.labels,
+                'annotations': self.annotations,
+                'values': self.values,
+                'status': self.status,
+            })
+        else:
+            pass
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self._last_status:
-            # Thay đổi status -> gửi mail
+        if self._last_status or self.annotations['level'] == 'Critical':
+            # Thay đổi status -> gửi mail hoặc Critical sẽ gửi mail liên tục
             print('[ALERT] Send mail')
             try:
                 m = EmailMultiAlternatives(

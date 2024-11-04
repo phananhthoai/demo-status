@@ -12,7 +12,11 @@
     <div style="word-spacing:normal;background-color:#111217;">
         <b>Name: {{ labels.alertname }}</b><br/>
         <b>Node: {{ labels.nodename }}</b><br/>
+        <b>Level: {{ annotations.level }}</b><br/>
         <b>Status: {{ status }}</b><br/>
+        {% if voice %}
+            <b>Voice: {{ voice }}</b><br/>
+        {% endif %}
     </div>
 </body>
 

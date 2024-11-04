@@ -47,5 +47,8 @@ def webhook(req: HttpRequest):
 
 @csrf_exempt
 def view(request):
-    status = Alert.objects.all()
-    return render(request, 'index.html', {'status': status})
+    alerts = Alert.objects.all().order_by('-created_at')[:10]
+    context = {
+        'status': alerts,
+    }
+    return render(request, 'index.html', context)
