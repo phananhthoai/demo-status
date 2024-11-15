@@ -33,6 +33,7 @@ class Alert(models.Model):
     labels = models.JSONField(null=True)
     annotations = models.JSONField(null=True)
     values = models.JSONField(null=True)
+    url = models.CharField(max_length=100, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -68,6 +69,7 @@ class Alert(models.Model):
                 'annotations': self.annotations,
                 'values': self.values,
                 'status': self.status,
+                'url': self.url,
                 'voice': self.get_audio(),
             })
         elif self.annotations['level'] == 'Warning':
@@ -76,6 +78,7 @@ class Alert(models.Model):
                 'annotations': self.annotations,
                 'values': self.values,
                 'status': self.status,
+                'url': self.url,
             })
         else:
             pass

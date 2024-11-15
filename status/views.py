@@ -14,6 +14,7 @@ def handle_alert(data):
     })
     alert.set_status(data['status'].upper())
     alert.values = data['values']
+    alert.url = data['panelURL']
     alert.save()
 
     return {

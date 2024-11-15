@@ -9,6 +9,7 @@
 
         .alert-container {
             font-family: Arial, sans-serif;
+            font-size: 20px;
             padding: 20px;
             /* Background chính */
             background-color: #000000;
@@ -24,9 +25,7 @@
 
         /* Style cho logo image */
         .logo-image {
-            height: 40px; /* Điều chỉnh kích thước logo */
-            /* Thay YOUR_LOGO_BASE64 bằng mã base64 của logo */
-            content: url('/admin/img/logo.png');
+            height: 40px;
             display: block;
         }
 
@@ -70,11 +69,11 @@
     <div class="alert-container">
         <!-- Phần logo -->
         <div class="logo-container">
-            <img class="logo-image" alt="ELOFUN" />
+            <img class="logo-image" src="https://status.hocdevops.me/static/admin/img/logo.png" alt="ELOFUN" />
         </div>
         <div class="alert-content">
             <div>
-                <span class="label">Name:</span>
+                <span class="label">Alert:</span>
                 <span class="value">{{ labels.alertname }}</span>
             </div>
             <div>
@@ -90,6 +89,22 @@
             <div>
                 <span class="label">Status:</span>
                 <span class="firing">{{ status }}</span>
+            </div>
+            <div>
+                <span class="label">Value:</span>
+                <span class="firing">
+                    {% if labels.alertname == "Disk Usage High" or labels.alertname == "Disk Usage Highest" %}
+                        {{ values.B }}Gb (remaining) / {{ values.D }}Gb (total)
+                    {% else %}
+                        {{ values.B }}%
+                    {% endif %}
+                </span>
+            </div>
+            <div>
+                <span class="label">Url:</span>
+                <span class="firing">
+                    <a href="{{ url }}">{{ url }}</a>
+                </span>
             </div>
             {% if voice %}
             <div>
