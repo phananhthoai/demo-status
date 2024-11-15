@@ -2,62 +2,73 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <style type="text/css">
-        :root {
-            --text-color: #eeeeee;
-            --label-color: #888888;
-            --critical-color: #ff4444;
-            --firing-color: #ff4444;
+        body {
+            margin: 0;
+            padding: 0;
         }
 
         .alert-container {
             font-family: Arial, sans-serif;
             padding: 20px;
-            background-color: rgba(17, 18, 23, 1);
+            /* Background chính */
+            background-color: #000000;
             width: 100%;
             min-width: 600px;
             box-sizing: border-box;
         }
 
+        /* Container cho logo */
         .logo-container {
             margin-bottom: 20px;
         }
 
+        /* Style cho logo image */
         .logo-image {
-            height: 40px;
+            height: 40px; /* Điều chỉnh kích thước logo */
+            /* Thay YOUR_LOGO_BASE64 bằng mã base64 của logo */
             content: url('/admin/img/logo.png');
+            display: block;
         }
 
-        .alert-content {
-            margin: 15px 0;
-            color: var(--text-color);
-            line-height: 2;
-            font-size: 16px;
+        .alert-content > div {
+            margin: 10px 0;
+            line-height: 1.5;
         }
 
         .label {
-            font-weight: bold;
-            color: var(--label-color);
-            display: inline-block;
+            color: #eeeeee;
             width: 80px;
-        }
-
-        .critical {
-            color: var(--critical-color);
-            font-weight: bold;
-        }
-
-        .firing {
-            color: var(--firing-color);
+            display: inline-block;
             font-weight: bold;
         }
 
         .value {
-            color: var(--text-color);
+            color: #eeeeee;
+        }
+
+        .firing {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .critical {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="alert-container">
+        <!-- Phần logo -->
         <div class="logo-container">
             <img class="logo-image" alt="ELOFUN" />
         </div>
@@ -83,7 +94,9 @@
             {% if voice %}
             <div>
                 <span class="label">Voice:</span>
-                <span class="value">{{ voice }}</span>
+                <span class="value">
+                    <a href="{{ voice }}">{{ voice }}</a>
+                </span>
             </div>
             {% endif %}
         </div>
