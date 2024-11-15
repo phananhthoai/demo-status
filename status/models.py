@@ -50,7 +50,7 @@ class Alert(models.Model):
 
     def get_audio(self):
         url = 'https://api.fpt.ai/hmi/tts/v5'
-        payload = f'Chào Team DevOps Có Lỗi { self.labels["alertname"] } Trong Hệ Thống Ở Node { self.labels["nodename"] }'
+        payload = f'Lỗi { self.labels["alertname"] } tại server { self.labels["nodename"] }'
         headers = {
             'api-key': API_VOICE,
             'speed': '',
@@ -89,7 +89,7 @@ class Alert(models.Model):
                 m = EmailMultiAlternatives(
                     f'Alert {self.fingerprint}: Status {self.status}',
                     'No text',
-                    "kenkukhanh@gmail.com",
+                    "khanhit@hocdevops.me",
                     ['thoai.phan@elofun.com'],
                 )
                 m.attach_alternative(self.build_mail_body(), 'text/html')

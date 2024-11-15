@@ -1,22 +1,92 @@
-<!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
-
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <style type="text/css">
-        b {
-            color: #eeeeee;
+        :root {
+            --text-color: #eeeeee;
+            --label-color: #888888;
+            --critical-color: #ff4444;
+            --firing-color: #ff4444;
+        }
+
+        .alert-container {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: rgba(17, 18, 23, 1);
+            width: 100%;
+            min-width: 600px;
+            box-sizing: border-box;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-image {
+            height: 40px;
+            content: url('/admin/img/logo.png');
+        }
+
+        .alert-content {
+            margin: 15px 0;
+            color: var(--text-color);
+            line-height: 2;
+            font-size: 16px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: var(--label-color);
+            display: inline-block;
+            width: 80px;
+        }
+
+        .critical {
+            color: var(--critical-color);
+            font-weight: bold;
+        }
+
+        .firing {
+            color: var(--firing-color);
+            font-weight: bold;
+        }
+
+        .value {
+            color: var(--text-color);
         }
     </style>
 </head>
 <body>
-    <div style="word-spacing:normal;background-color:#111217;">
-        <b>Name: {{ labels.alertname }}</b><br/>
-        <b>Node: {{ labels.nodename }}</b><br/>
-        <b>Level: {{ annotations.level }}</b><br/>
-        <b>Status: {{ status }}</b><br/>
-        {% if voice %}
-            <b>Voice: {{ voice }}</b><br/>
-        {% endif %}
+    <div class="alert-container">
+        <div class="logo-container">
+            <img class="logo-image" alt="ELOFUN" />
+        </div>
+        <div class="alert-content">
+            <div>
+                <span class="label">Name:</span>
+                <span class="value">{{ labels.alertname }}</span>
+            </div>
+            <div>
+                <span class="label">Node:</span>
+                <span class="value">{{ labels.nodename }}</span>
+            </div>
+            <div>
+                <span class="label">Level:</span>
+                <span {% if annotations.level == 'Critical' %}class="critical"{% else %}class="value"{% endif %}>
+                    {{ annotations.level }}
+                </span>
+            </div>
+            <div>
+                <span class="label">Status:</span>
+                <span class="firing">{{ status }}</span>
+            </div>
+            {% if voice %}
+            <div>
+                <span class="label">Voice:</span>
+                <span class="value">{{ voice }}</span>
+            </div>
+            {% endif %}
+        </div>
     </div>
 </body>
-
+</html>
