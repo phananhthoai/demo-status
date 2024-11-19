@@ -138,7 +138,7 @@ CSRF_COOKIE_SAMESITE = 'Strict'
 CSRF_COOKIE_SECURE = False
 CSRF_TRUSTED_ORIGINS = []
 if 'PUBLIC_HOST' in os.environ:
-    CSRF_TRUSTED_ORIGINS.append('http://%s' % os.environ.get('PUBLIC_HOST'))
+    CSRF_TRUSTED_ORIGINS.append('https://%s' % os.environ.get('PUBLIC_HOST'))
 
 STATIC_ROOT = os.environ.get('STATIC_ROOT') or join(BASE_DIR, 'static')
 
@@ -148,7 +148,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER', 'user')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'password')
+TOKEN_GRAFANA = os.environ.get('TOKEN_GRAFANA', 'default')
 
-
-
-API_VOICE = os.environ.get('API_VOICE', 'password')
